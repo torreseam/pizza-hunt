@@ -5,28 +5,51 @@ const pizzaController = {
     // get all pizzas- serves as a call back funtion for the get/api/pizza usig mongoose find()
     getAllPizza(req, res) {
         Pizza.find({})
-        .then(dbPizzaData => res.json(dbPizzaData))
-        .catch(err => {
-            console.log(err);
-            res.status(500).json(err)
-        });
+            .populate({
+                path: 'comments',
+                select: '-__v'
+            })
+            .select('-__v')
+            .sort({ _id: -1 })
+            .then(dbPizzaData => res.json(dbPizzaData))
+        // .then(dbPizzaData => res.json(dbPizzaData))
+        // .catch(err => {
+        //     console.log(err);
+        //     res.status(500).json(err)
+        // });
+                .catch(err => {
+                    console.log(err);
+                    res.sendStatus(400);
+                });
     },
 //get pizza by id- find one method for a single pizza by ID
     getPizzaById({ params }, res) {
+        // Pizza.findOne({ _id: params.id })
+        // .then(dbPizzaData => {
+        //     //if not pizza is found send 404 error
+        //     if (!dbPizzaData) {
+        //         res.status(404).json({ message: 'No pizza found with this id!' });
+        //         return;
+        //     }
+        //     res.json(dbPizzaData)
+        // })
+        //     .catch(err => {
+        //         console.log(err);
+        //         res.status(400).json(err);
+        //     });
         Pizza.findOne({ _id: params.id })
-        .then(dbPizzaData => {
-            //if not pizza is found send 404 error
-            if (!dbPizzaData) {
-                res.status(404).json({ message: 'No pizza found with this id!' });
-                return;
-            }
-            res.json(dbPizzaData)
-        })
+            .populate({
+                path: 'comments',
+                select: '-__v'
+            })
+            .select('-__v')
+            .then(dbPizzaData => res.json(dbPizzaData))
             .catch(err => {
                 console.log(err);
-                res.status(400).json(err);
+                res.sendStatus(400);
             });
     },
+
 
     // createPizza
     createPizza({ body }, res) {
