@@ -9,10 +9,13 @@ const ReplySchema = new Schema(
             default: () => new Types.ObjectId()
         },
         replyBody: {
-            type: String
+            type: String,
+            required: true,
+            trim:  true
         },
         writtenBy: {
-            type: String
+            type: String,
+            required: true
         },
         createdAt: {
             type: Date,
@@ -29,10 +32,12 @@ const ReplySchema = new Schema(
 
 const CommentSchema =new Schema({
     writtenBy: {
-        type: String
+        type: String,
+        required: true
     },
     commentBody: {
-        type: String
+        type: String,
+        required: true
     },
     createdAt: {
         type: Date,
@@ -55,5 +60,6 @@ CommentSchema.virtual('replyCount').get(function () {
 });
 
 const Comment = model('Comment', CommentSchema);
+const Reply = model("Reply", ReplySchema);
 
-module.exports = Comment;
+module.exports = Comment; Reply;

@@ -24,13 +24,14 @@ const commentController = {
 
     },
 
+//add reply
     addReply({ params, body }, res) {
         Comment.findOneAndUpdate(
             { _id: params.commentId },
             //addtoset will block duplicates
             // { $addToSet: { replies: body } },
             { $push: { replies: body } },
-            { new: true }
+            { new: true, runValidators: true }
         )
             .then(dbPizzaData => {
                 if (!dbPizzaData) {

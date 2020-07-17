@@ -61,16 +61,16 @@ const pizzaController = {
     // update pizza by id- Mongoose finds a single document we want to update, then updates it and returns the updated document.
     updatePizza({ params, body }, res) {
         //true, we're instructing Mongoose to return the new version of the document
-        Pizza.findOneAndUpdate({ _id: params.id }, body, { new: true })
-            .then(dbPizzaData => {
-                if (!dbPizzaData) {
-                    res.status(404).json({ message: 'No pizza found with this id!' });
-                    return;
-                }
-                res.json(dbPizzaData);
-            })
-            .catch(err => res.status(400).json(err));
-    },
+ Pizza.findOneAndUpdate({ _id: params.id }, body, { new: true, runValidators: true })
+    .then(dbPizzaData => {
+      if (!dbPizzaData) {
+        res.status(404).json({ message: 'No pizza found with this id!' });
+        return;
+      }
+      res.json(dbPizzaData);
+    })
+    .catch(err => res.json(err));
+},
 
     // delete a pizza from the database when we make a request to DELETE /api/pizzas/:id
     // find one document to be returned and deleted from the DB
